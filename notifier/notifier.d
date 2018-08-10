@@ -15,13 +15,14 @@ pragma (lib, "allegro_audio");
 pragma (lib, "allegro_acodec");
 
 immutable string apiEndpoint = "https://api.eosnewyork.io";
-immutable string apiQuery = "/v1/chain/get_table_rows";
-immutable string apiData = format ("{%(%s,%)}", [
+immutable string apiQuery = apiEndpoint ~ "/v1/chain/get_table_rows";
+immutable string apiData = format ("{%-(%s,%)}", [
     `"scope":"wizardstoken"`,
     `"code":"wizardstoken"`,
     `"table":"shop"`,
     `"json":"true"`,
     ]);
+//{"scope":"wizardstoken","code":"wizardstoken","table":"shop","json":"true"}
 
 immutable auto once = ALLEGRO_PLAYMODE.ALLEGRO_PLAYMODE_ONCE;
 
@@ -60,9 +61,7 @@ void mainLoop ()
 		Thread.sleep (1000.msecs);
 		try
 		{
-			next = parseJSON (post (apiEndpoint ~ apiQuery,
-			    `{"scope":"wizardstoken","code":"wizardstoken",` ~
-			    `"table":"shop","json":"true"}`));
+			next = parseJSON (post (apiQuery, apiData));
 		}
 		catch (Exception e)
 		{
