@@ -18,6 +18,7 @@ struct Wizard
 	int [dnaLength] dna;
 	int [dnaLength] attack;
 	int [dnaLength] resist;
+	bool [dnaLength] skillUsed;
 	int damage;
 
 	// constructor from array
@@ -26,17 +27,13 @@ struct Wizard
 		assert (a.length == dnaLength);
 		dna = a;
 		calculateAD ();
-		damage = 0;
 	}
 
 	// constructor from id and array
 	this (int id_, int [] a)
 	{
 		id = id_;
-		assert (a.length == dnaLength);
-		dna = a;
-		calculateAD ();
-		damage = 0;
+		this (a);
 	}
 
 	// constructor from string
@@ -61,6 +58,12 @@ struct Wizard
 				resist[i] = sigma - delta;
 			}
 		}
+	}
+
+	void initialize ()
+	{
+		damage = 0;
+		skillUsed[] = false;
 	}
 
 	double ddc () const
@@ -100,8 +103,8 @@ bool battle (ref Wizard wizard1, ref Wizard wizard2)
 /// Phase 0: start a fight
 void startFight (ref Wizard wizard1, ref Wizard wizard2)
 {
-	wizard1.damage = 0;
-	wizard2.damage = 0;
+	wizard1.initialize ();
+	wizard2.initialize ();
 }
 
 /// Phase 1: random damage
@@ -131,7 +134,14 @@ void magicFight (ref Wizard wizard1, ref Wizard wizard2)
 /// The wizard `attacker` attacks the wizard `defender` with multiplier `mult`
 void attack (ref Wizard attacker, ref Wizard defender, int mult)
 {
-	int skill = uniform (0, dnaLength);
+	int skill;
+	do
+	{
+		skill = uniform (0, dnaLength);
+	}
+	while (attacker.skillUsed[skill]);
+	attacker.skillUsed[skill] = true;
+
 	int attackPower = uniformInclusive (1, attacker.attack[skill]) * mult;
 	int resistPower = uniformInclusive (1, defender.resist[skill]);
 	if (attackPower > resistPower + sigma)
