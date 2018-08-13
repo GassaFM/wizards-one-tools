@@ -3,7 +3,7 @@
 // Stores wizard number ID in file "ID.txt".
 // Warning: it takes a long time!
 module get_json;
-import std.conv, std.net.curl, std.parallelism, std.range, std.stdio;
+import std.conv, std.net.curl, std.range, std.stdio;
 
 immutable int lastId = 16361;
 
