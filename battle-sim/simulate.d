@@ -1,6 +1,6 @@
 // Author: Ivan Kazmenko (gassa@mail.ru)
 // Simulates a battle of two wizards.
-// Reads two DNA strings of binaries to standard input.
+// Reads two DNA strings of binaries from standard input.
 // Writes result to standard output.
 // Example usage: "./simulate < simulate.in".
 module simulate;
