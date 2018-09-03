@@ -1,10 +1,11 @@
 dc = dmd
 dcopts = -O -inline
 
-all: simulate probability precise tournament statistics rps
+all: simulate simulatewiz probability precise tournament statistics rps
 
 clean:
 	rm -f simulate{,.exe,.obj} \
+	      simulatewiz{,.exe,.obj} \
 	      probability{,.exe,.obj} \
 	      precise{,.exe,.obj} \
 	      tournament{,.exe,.obj} \
@@ -13,6 +14,9 @@ clean:
 
 simulate: simulate.d wizard.d
 	$(dc) $(dcopts) simulate.d wizard.d
+
+simulatewiz: simulatewiz.d wizard.d distribution.d
+	$(dc) $(dcopts) simulatewiz.d wizard.d distribution.d
 
 probability: probability.d wizard.d distribution.d
 	$(dc) $(dcopts) probability.d wizard.d distribution.d
