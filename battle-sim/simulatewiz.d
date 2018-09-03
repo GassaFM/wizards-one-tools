@@ -2,7 +2,7 @@
 // Calculates winning probability for a battle of two wizards.
 // Reads two DNA strings separated from two command line arguments.
 // Writes the result to standard output.
-// Example usage:
+// Example usage (wizards #272 and #2):
 // ./simulatewiz 54_39_45_56_44_34_41_47 44_45_55_65_68_32_46_58
 // Example output:
 // 35.23%
