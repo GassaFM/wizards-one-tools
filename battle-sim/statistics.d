@@ -21,10 +21,10 @@ void main ()
 	{
 		int k = p[i];
 		auto best = wins[k].maxElement;
-		auto worst = wins[k].filter !(x => x != 0).minElement;
+		auto worst = chain (wins[k][0..k], wins[k][k + 1..$]).minElement;
 		fileOut.writefln ("Wizard id=%-5s: score %s, ddc %6.3f, " ~
-		    "best %s (id=%-5s), worst %s (id=%-5s)",
-		    wizards[k].id, s[k], wizards[k].ddc,
+		    "norm %6.3f, best %s (id=%-5s), worst %s (id=%-5s)",
+		    wizards[k].id, s[k], wizards[k].ddc, wizards[k].norm,
 		    best, wizards[wins[k].countUntil (best)].id,
 		    worst, wizards[wins[k].countUntil (worst)].id);
 	}

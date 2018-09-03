@@ -19,6 +19,7 @@ struct Wizard
 	int [dnaLength] attack;
 	int [dnaLength] resist;
 	int damage;
+	string owner;
 
 	// constructor from array
 	this (int [] a)
@@ -33,10 +34,14 @@ struct Wizard
 	this (int id_, int [] a)
 	{
 		id = id_;
-		assert (a.length == dnaLength);
-		dna = a;
-		calculateAD ();
-		damage = 0;
+		this (a);
+	}
+
+	// constructor from id and owner and array
+	this (int id_, string owner_, int [] a)
+	{
+		owner = owner_;
+		this (id_, a);
 	}
 
 	// constructor from string
@@ -71,6 +76,16 @@ struct Wizard
 			res += abs (dna[i] - mean);
 		}
 		return res / dnaLength;
+	}
+
+	double norm () const
+	{
+		double res = 0.0;
+		foreach (i; 0..dnaLength)
+		{
+			res += (dna[i] - mean) ^^ 2;
+		}
+		return sqrt (res / dnaLength);
 	}
 
 	auto toString () const
