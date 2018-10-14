@@ -46,7 +46,7 @@ void main ()
 		{
 			if (w2.id != w1.id)
 			{
-				auto cur = calcProbability (w1, w2);
+				auto cur = calcProbabilityNew (w1, w2);
 				probs ~= cur;
 				prob += cur;
 				num += 1;

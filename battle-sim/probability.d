@@ -40,5 +40,6 @@ void main ()
 		calcProbability (wizard1, wizard2);
 	}
 */
-	writefln ("Probability: %.10f", calcProbability (wizard1, wizard2));
+	writefln ("Probability old: %.10f", calcProbabilityOld (wizard1, wizard2));
+	writefln ("Probability new: %.10f", calcProbabilityNew (wizard1, wizard2));
 }
