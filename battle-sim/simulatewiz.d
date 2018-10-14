@@ -14,5 +14,6 @@ void main (string [] args)
 {
 	auto wizard1 = Wizard (args[1].split ("_").map !(to !(int)).array);
 	auto wizard2 = Wizard (args[2].split ("_").map !(to !(int)).array);
-	writefln ("%5.2f%%", calcProbability (wizard1, wizard2) * 100.0);
+	writefln ("%5.2f%%", calcProbabilityOld (wizard1, wizard2) * 100.0);
+	writefln ("%5.2f%%", calcProbabilityNew (wizard1, wizard2) * 100.0);
 }

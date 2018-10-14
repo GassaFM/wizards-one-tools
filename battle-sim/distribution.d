@@ -1,6 +1,7 @@
 // Author: Ivan Kazmenko (gassa@mail.ru)
 // Auxiliary module to calculate probabilities for wizard battles.
 module distribution;
+import core.bitop;
 import std.algorithm;
 import std.range;
 import std.stdio;
@@ -99,7 +100,8 @@ static this ()
 	precalcAD = doPrecalcAD ();
 }
 
-Distribution damageDistribution (ref Wizard attacker, ref Wizard defender)
+/** old damage distribution calculation: variant 1, random from 1 */
+Distribution damageDistributionOld (ref Wizard attacker, ref Wizard defender)
 {
 	Distribution [] d;
 	Distribution [] e;
@@ -114,6 +116,48 @@ Distribution damageDistribution (ref Wizard attacker, ref Wizard defender)
 	p = p + p; // 2 rounds
 	p = p + p; // 2 * 2 = 4 rounds
 	p = p + meanDistribution (e); // last round
+	return p;
+}
+
+/** actual probability calculation: variant 2, random from 0 */
+Distribution damageDistributionNew (ref Wizard attacker, ref Wizard defender)
+{
+	Distribution [] d;
+	Distribution [] e;
+	foreach (skill; 0..dnaLength)
+	{
+		auto attackLimit = attacker.attack[skill] + 1;
+		auto resistLimit = defender.resist[skill] + 1;
+		d ~= precalcAD[attackLimit][resistLimit];
+		e ~= precalcAD[attackLimit * 2][resistLimit];
+	}
+
+	immutable int masks = 1 << dnaLength;
+	auto subsetDist = new Distribution [masks];
+	auto id = Distribution (1);
+	id[0] = 1.0;
+	subsetDist[0] = id;
+	Distribution [] ans;
+	foreach (mask; 1..1 << dnaLength)
+	{
+		int k = bsr (mask);
+		if (popcnt (mask) <= 4)
+		{
+			subsetDist[mask] = subsetDist[mask ^ (1 << k)] + d[k];
+			if (popcnt (mask) == 4)
+			{
+				foreach (i; 0..dnaLength)
+				{
+					if (!(mask & (1 << i)))
+					{
+						ans ~= subsetDist[mask] + e[i];
+					}
+				}
+			}
+		}
+	}
+
+	Distribution p = meanDistribution (ans);
 	return p;
 }
 
@@ -132,10 +176,28 @@ static this ()
 	}
 }
 
-double calcProbability (ref Wizard wizard1, ref Wizard wizard2)
+/** old probability calculation: variant 1, random from 1 */
+double calcProbabilityOld (ref Wizard wizard1, ref Wizard wizard2)
 {
-	auto p = damageDistribution (wizard1, wizard2);
-	auto q = damageDistribution (wizard2, wizard1);
+	auto p = damageDistributionOld (wizard1, wizard2);
+	auto q = damageDistributionOld (wizard2, wizard1);
+
+	double res = 0.0;
+	foreach (d1; 0..damageLimit)
+	{
+		foreach (d2; 0..damageLimit)
+		{
+			res += p[d1] * q[d2] * factor[d1][d2];
+		}
+	}
+	return res;
+}
+
+/** new probability calculation: variant 2, random from 0 */
+double calcProbabilityNew (ref Wizard wizard1, ref Wizard wizard2)
+{
+	auto p = damageDistributionNew (wizard1, wizard2);
+	auto q = damageDistributionNew (wizard2, wizard1);
 
 	double res = 0.0;
 	foreach (d1; 0..damageLimit)
