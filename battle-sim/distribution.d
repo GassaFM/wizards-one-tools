@@ -126,10 +126,10 @@ Distribution damageDistributionNew (ref Wizard attacker, ref Wizard defender)
 	Distribution [] e;
 	foreach (skill; 0..dnaLength)
 	{
-		auto attackLimit = attacker.attack[skill] + 1;
-		auto resistLimit = defender.resist[skill] + 1;
-		d ~= precalcAD[attackLimit][resistLimit];
-		e ~= precalcAD[attackLimit * 2][resistLimit];
+		auto attackLimit = attacker.attack[skill];
+		auto resistLimit = defender.resist[skill];
+		d ~= precalcAD[attackLimit + 1][resistLimit + 1];
+		e ~= precalcAD[attackLimit * 2 + 1][resistLimit + 1];
 	}
 
 	immutable int masks = 1 << dnaLength;
