@@ -24,6 +24,9 @@ probability: probability.d wizard.d distribution.d
 precise: precise.d wizard.d distribution.d
 	$(dc) $(dcopts) precise.d wizard.d distribution.d
 
+matchup: matchup.d wizard.d distribution.d
+	$(dc) $(dcopts) matchup.d wizard.d distribution.d
+
 tournament: tournament.d wizard.d tools.d
 	$(dc) $(dcopts) tournament.d wizard.d tools.d
 

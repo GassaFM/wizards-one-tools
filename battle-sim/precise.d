@@ -42,6 +42,7 @@ void main ()
 		int hiId = -1;
 		double [] probs;
 		probs.reserve (wizards.length - 1);
+//		stderr.writeln (w1.id);
 		foreach (w2; wizards)
 		{
 			if (w2.id != w1.id)
